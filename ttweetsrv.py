@@ -63,7 +63,7 @@ def threaded(c,addr):
       # if user sends tweet command, add the tweet to dictionary after removing double quotes from text
       #and check that tweet is less than 150 characters
       if(tokens[0] == "tweet"):
-         tweet = ''.join([str(elem) for elem in tokens[1:]])
+         tweet = ''.join([str(elem)+" " for elem in tokens[1:]])
          tweet = tweet[1:-1]
          if(len(tweet) <= 150):
             addTweetToUsersTimeLine(userName, tweet)
