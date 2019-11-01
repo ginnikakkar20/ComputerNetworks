@@ -4,59 +4,53 @@ import sys
 import re
   
 def Main(): 
-
     # local host IP '127.0.0.1' 
     host = sys.argv[1]
 
     # Define the port on which you want to connect 
     port = int(sys.argv[2])
 
-    #UserName 
+    # UserName provided by client
     userName = sys.argv[3]
+
     #regular expression to check if username contains any special characters
-    regex = re.compile('[@_!#$%^&*()<>?/\|}{~:]') 
-
-    if( regex.search(userName) == None and len(userName) <= 64):
-
+    #regex = re.compile('[@_!#$%^&*()<>?/\|}{~:]')
+    reg = re.compile('^[a-z0-9]+$')
+    #print("----------------------------------", reg.match(userName))
+    if( reg.match(userName) != None and len(userName) <= 64):
+        # create a socket
         s = socket.socket(socket.AF_INET,socket.SOCK_STREAM) 
-
-        # connect to server on given host and port
+        # connect to server on local computer 
         s.connect((host,port)) 
     
-        # username sent to server
+        # username sent to server 
         s.send(userName.encode('ascii')) 
 
-        # message received from server 
+        # message received from server  on whether username existing or not
         data = s.recv(1024) 
 
-        # print the received message
+        # display whether username available or not to the user
         print(str(data.decode('ascii'))) 
     
         while True:
-            #  client will do tweet or time line or exit
+            #  client will enter command tweet or timeline or exit 
             command = input(">")
             tokens = command.split(" ")
-            print(tokens)
 
-            if(tokens[0] == "exit"):
-                print("inside exit block client")
-                clientData = s.recv(1024)
-                print(clientData)
-                print(str(clientData.decode('ascii')))
-                #break
-            
-            elif(tokens[0] == "tweet"):
-                #print("in Tweet: " + command)
+            if(tokens[0] == "tweet"):
                 s.send(command.encode('ascii'))
             
             elif(tokens[0] == "timeline"):
                 s.send(command.encode('ascii'))
-                #print("Waiting for timeLine Data")
                 timeLineData = s.recv(1024)
                 print(str(timeLineData.decode('ascii')))
+            elif(tokens[0] == "exit"):
+                s.send(command.encode('ascii'))
+                print("-Bye Bye")
+                break
             else:
-                print("-Command not found")
-
+                print('-Command not found')
+                
 
 
         # close the connection 
