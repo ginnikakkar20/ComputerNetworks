@@ -14,9 +14,8 @@ def Main():
     userName = sys.argv[3]
 
     #regular expression to check if username contains any special characters
-    #regex = re.compile('[@_!#$%^&*()<>?/\|}{~:]')
     reg = re.compile('^[a-z0-9]+$')
-    #print("----------------------------------", reg.match(userName))
+
     if( reg.match(userName) != None and len(userName) <= 64):
         # create a socket
         s = socket.socket(socket.AF_INET,socket.SOCK_STREAM) 
@@ -37,17 +36,23 @@ def Main():
             command = input(">")
             tokens = command.split(" ")
 
+            # if "tweet" command, just send command to server
             if(tokens[0] == "tweet"):
                 s.send(command.encode('ascii'))
             
+            # if "timeline" command, send command and wait for server to respond with unread messages in inbox
             elif(tokens[0] == "timeline"):
                 s.send(command.encode('ascii'))
                 timeLineData = s.recv(1024)
                 print(str(timeLineData.decode('ascii')))
+            
+            # if "exit" command, send command to server and display message for user
             elif(tokens[0] == "exit"):
                 s.send(command.encode('ascii'))
                 print("-Bye Bye")
                 break
+            
+            # if any other command, notify user that command not found
             else:
                 print('-Command not found')
                 
