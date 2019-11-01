@@ -53,7 +53,6 @@ def threaded(c,addr):
 
       # if there is no more calls from client break out of the loop
       if not data: 
-         #print('-Bye Bye') 
          break  
       
       command = data.decode('ascii')
@@ -80,9 +79,13 @@ def threaded(c,addr):
          #print("Sending TimeLine Data to " + userName)
          c.send(timeLineData.encode('ascii'))
          user.timeLine.clear()
+      
+      # if user sends exit command, remove user from dicitionary and delete the user's data in timeline
       elif(tokens[0] == "exit"):
          users.remove(user)
          del userData[userName]
+      
+      # if user sends any command other than tweet, timeline and exit, ignore it
       else:
          continue
 
@@ -100,8 +103,7 @@ def Main():
    s.bind((host, port))
   
    # put the socket into listening mode 
-   s.listen(5) 
-   print("socket is listening") 
+   s.listen(5)
   
    # a forever loop until client wants to exit 
    while True: 
