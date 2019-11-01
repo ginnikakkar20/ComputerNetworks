@@ -2,7 +2,7 @@
 import socket 
   
 # import thread module 
-from _thread import *
+#from _thread import *
 import threading 
 import sys
   
